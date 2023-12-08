@@ -10,4 +10,6 @@ public interface StoreService {
     List<Store> getAll();
     Store update(Store store);
     void delete(String id);
+
+
 }

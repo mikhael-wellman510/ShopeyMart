@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
+// ini pakai method ORM
 public class StoreServiceImpl implements StoreService {
 
     //Ini harus pakai final
@@ -36,9 +36,11 @@ public class StoreServiceImpl implements StoreService {
     public Store update(Store store) {
         // Ambil Id nya
         Store currentStoreId = getById(store.getId());
+        System.out.println(currentStoreId);
         if (currentStoreId != null){
             return storeRepositori.save(store);
         }
+
         return null;
     }
 

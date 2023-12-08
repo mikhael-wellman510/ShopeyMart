@@ -18,8 +18,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 public class Store {
 
     @Id
-    @GenericGenerator(name = "system-uuid")
-    @GeneratedValue(strategy = GenerationType.UUID, generator = "system-uuid")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name= "no_siup" ,unique = true ,nullable = false , length = 30) // Harus Unique
