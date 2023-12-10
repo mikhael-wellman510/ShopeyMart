@@ -8,7 +8,7 @@ public class ShopeymartApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShopeymartApplication.class, args);
-		System.out.println("tes");
+		System.out.println("Aplikasi Berjalan");
 	}
 
 }
