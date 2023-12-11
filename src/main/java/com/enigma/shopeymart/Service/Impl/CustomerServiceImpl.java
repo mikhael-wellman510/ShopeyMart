@@ -34,10 +34,11 @@ public class CustomerServiceImpl implements CustomerService {
                 customerRepositori.save(customer);
 
         return CustomerResponse.builder()
-                .address(customerRequest.getAddress())
-                .email(customerRequest.getEmail())
-                .mobilePhone(customerRequest.getMobilePhone())
-                .name(customerRequest.getName())
+                .id(customer.getId())
+                .address(customer.getAddress())
+                .email(customer.getEmail())
+                .mobilePhone(customer.getMobilePhone())
+                .name(customer.getName())
                 .build();
     }
 
@@ -52,6 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         // ambil isi cusomer
         return CustomerResponse.builder()
+                .id(customer.getId())
                 .address(customer.getAddress())
                 .email(customer.getEmail())
                 .mobilePhone(customer.getMobilePhone())
@@ -83,10 +85,11 @@ public class CustomerServiceImpl implements CustomerService {
 
         // Ambil Id Dari Controller
         CustomerResponse custRespon = getByIdCustomer(customerRequest.getId());
+//        Customer customer = customerRepositori.findById(customerRequest.getId()).orElse(null);
 
         if (custRespon != null){
             // Lalu siap di Update ke db
-            Customer customer = Customer.builder()
+            Customer customers = Customer.builder()
                     //Id ambil dari cust response
                     .id(custRespon.getId())
                     // selebih nya ambil dari body yg dikirim controller
@@ -96,8 +99,9 @@ public class CustomerServiceImpl implements CustomerService {
                     .name(customerRequest.getName())
                     .build();
 
-            customerRepositori.save(customer);
+            customerRepositori.save(customers);
             return CustomerResponse.builder()
+                    .id(customerRequest.getId())
                     .address(customerRequest.getAddress())
                     .email(customerRequest.getEmail())
                     .mobilePhone(customerRequest.getMobilePhone())
@@ -114,6 +118,11 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerResponse custIds = getByIdCustomer(id);
         System.out.println(custIds);
-        customerRepositori.deleteById(id);
+
+        if (custIds != null){
+            System.out.println("success delete");
+            customerRepositori.deleteById(id);
+        }
+
     }
 }

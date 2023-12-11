@@ -169,12 +169,15 @@ public class StoreServiceImpl implements StoreService {
     @Override
     // parameter nya isi Id yg di tulis di postman
     public void deleteStore(String id) {
-        System.out.println( getByIdStores(id));
+//        System.out.println( getByIdStores(id));
 
         // Minta hasil id dari yg d tulis d controller model untuk hapus Ke id yg d tuju
         StoreResponse storeId = getByIdStores(id);
+       if (storeId != null){
+           System.out.println("succes Delete");
+           storeRepositori.deleteById(id);
+       }
 
-        System.out.println(storeId);
-        storeRepositori.deleteById(storeId.getId());
+
     }
 }
