@@ -4,11 +4,13 @@ package com.enigma.shopeymart.Controller;
 import com.enigma.shopeymart.Constant.AppPath;
 import com.enigma.shopeymart.Dto.Request.ProductRequest;
 import com.enigma.shopeymart.Dto.Response.CommonResponse;
+import com.enigma.shopeymart.Dto.Response.PagingResponse;
 import com.enigma.shopeymart.Dto.Response.ProductResponse;
 import com.enigma.shopeymart.Entity.Product;
 import com.enigma.shopeymart.Entity.ProductPrice;
 import com.enigma.shopeymart.Service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,7 @@ public class ProductController {
 
     }
 
+
     @GetMapping(value = "/getAllProducts")
     public List<ProductResponse> getAll(){
         return productService.getAllProduct();
@@ -50,6 +53,30 @@ public class ProductController {
                         .statusCode(HttpStatus.CREATED.value())
                         .message("Succesfull getById")
                         .data(productResponse)
+                        .build()
+                );
+    }
+
+    @GetMapping(value = "/page")
+    public ResponseEntity<?> getAllProductPage(
+            @RequestParam(name = "name" , required = false)String name,
+            @RequestParam(name = "maxPrice" , required = false)Long maxPrice,
+            @RequestParam(name = "page" , required = false ,defaultValue = "0") Integer page,
+            @RequestParam(name = "size" , required = false , defaultValue = "5") Integer size
+            ){
+            Page<ProductResponse> productResponse = productService.getAllByNameOrPrice(name,maxPrice,page,size);
+        PagingResponse pagingResponse = PagingResponse.builder()
+                .currentPage(page)
+                .totalPage(productResponse.getTotalPages())
+                .size(size)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(CommonResponse.builder()
+                        .statusCode(HttpStatus.CREATED.value())
+                        .message("Succes Get all Product")
+                        .data(productResponse.getContent())
+                        .paging(pagingResponse)
                         .build()
                 );
     }

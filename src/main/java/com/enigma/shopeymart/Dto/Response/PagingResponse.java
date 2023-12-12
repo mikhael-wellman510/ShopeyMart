@@ -1,22 +1,19 @@
 package com.enigma.shopeymart.Dto.Response;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
+public class PagingResponse {
 
-// Ini buat kasih response di controller
-public class CommonResponse<T> {
+    private  Integer currentPage;
+    private  Integer totalPage;
+    private Integer size;
 
-    private Integer statusCode ;
-    private String message;
-    private T data;
-    private PagingResponse paging;
 
 }

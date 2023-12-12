@@ -12,11 +12,20 @@ import com.enigma.shopeymart.Repositori.ProductRepositori;
 import com.enigma.shopeymart.Service.ProductPriceService;
 import com.enigma.shopeymart.Service.ProductService;
 import com.enigma.shopeymart.Service.StoreService;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +45,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getByIdProduct(String id) {
-        Product product = productRepositori.findById(id).orElse(null);
+//        Product product = productRepositori.findById(id).orElse(null);
+//
+//        return ProductResponse.builder()
+//                .id(product.getId())
+//                .productName(product.getName())
+//                .description(product.getDescription())
+//                // kalau mau bawa tabel productPrices
+//                .productPrice(product.getProductPrices())
+//                .build();
 
-        return ProductResponse.builder()
-                .id(product.getId())
-                .productName(product.getName())
-                .description(product.getDescription())
-                // kalau mau bawa tabel productPrices
-                .productPrice(product.getProductPrices())
-                .build();
+        return null;
     }
 
     @Override
@@ -77,7 +88,9 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackOn = Exception.class) // Untuk Rolback jika ada yg gagal
     @Override
     public ProductResponse createProductAndProductPrice(ProductRequest productRequest) {
+
         // mendapatkan id store
+        Store store = new Store();
         StoreResponse storeResponse = storeService.getByIdStores(productRequest.getStoreId().getId());
         System.out.println("ini adalah store response : " +storeResponse);
 
@@ -107,6 +120,50 @@ public class ProductServiceImpl implements ProductService {
         productPriceService.create(productPrice);
 
         // Tampilkan product nya
+        return toProductResponse(store,product,productPrice);
+    }
+
+
+    @Override
+    public Page<ProductResponse> getAllByNameOrPrice(String name, Long maxPrice, Integer page, Integer size) {
+        // Specification untuk menentukan  kriteria pencarian , disini criteria pencarian ditandakan dengan root, root yang dimaksud adlah entity product
+        Specification<Product> spesification = (root , query ,criteriaBuilder) -> {
+            // Join untuk merelasikan produk dan price
+            Join<Product ,ProductPrice> productPrice =root.join("productPrices");
+           // Predicate dgunakan untuk menggunaakan Like dimana menggunakan kondisi pencarian
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (name != null){
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")) ,"%" + name.toLowerCase() + "%"));
+
+            }
+
+            if (maxPrice != null){
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(productPrice.get("price") ,maxPrice));
+            }
+
+            return  query.where(predicates.toArray(new Predicate[]{})).getRestriction();
+
+        };
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Product> products = productRepositori.findAll(spesification,pageable);
+
+        List<ProductResponse> productResponses = new ArrayList<>();
+
+        for (Product product : products.getContent()){
+            Optional<ProductPrice> productPrice = product.getProductPrices()
+                    .stream()
+                    .filter(ProductPrice::getIsActive).findFirst();
+
+            if (productPrice.isEmpty()) continue;
+            Store store = productPrice.get().getStore();
+            productResponses.add(toProductResponse(store,product,productPrice.get()));
+        }
+        return new PageImpl<>(productResponses,pageable,products.getTotalElements());
+    }
+
+    private static ProductResponse toProductResponse(Store store , Product product,ProductPrice productPrice){
         return ProductResponse.builder()
                 .id(product.getId())
                 .productName(product.getName())
@@ -114,12 +171,9 @@ public class ProductServiceImpl implements ProductService {
                 .price(productPrice.getPrice())
                 .stock(productPrice.getStock())
                 .store(StoreResponse.builder()
-                        .id(storeResponse.getId())
-                        .storeName(storeResponse.getStoreName())
-                        .noSiup(storeResponse.getNoSiup())
-                        .storeName(storeResponse.getStoreName())
-                        .address(storeResponse.getAddress())
-                        .phone(storeResponse.getPhone())
+                        .id(store.getId())
+                        .storeName(store.getName())
+                        .noSiup(store.getNoSiup())
                         .build())
                 .build();
     }

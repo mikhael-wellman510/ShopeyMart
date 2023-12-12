@@ -7,16 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
+public class OrderDetailResponse {
 
-// Ini buat kasih response di controller
-public class CommonResponse<T> {
-
-    private Integer statusCode ;
-    private String message;
-    private T data;
-    private PagingResponse paging;
+    private String orderDetailId;
+    private ProductResponse product;
+    private  Integer quantity ;
 
 }

@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="m_customer")
-@Data
+@Data // ini untuk membuat perubahan (sebagai setter geter)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true) // ini untuk membuat perubahan (sebagai setter geter)
+@Builder(toBuilder = true)
 public class Customer {
     //id
     //name
