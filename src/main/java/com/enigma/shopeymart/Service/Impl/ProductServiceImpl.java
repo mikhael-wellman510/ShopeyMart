@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepositori productRepositori;
     private final StoreService storeService;
-    private final ProductPriceRepositori productPriceRepositori;
+
 
     // ambil objek untuk bawa method ke sini
     private final ProductPriceService productPriceService;
@@ -89,8 +89,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse createProductAndProductPrice(ProductRequest productRequest) {
 
-        // mendapatkan id store
-        Store store = new Store();
+
+        // Todo -> Mengambil data Store Id
         StoreResponse storeResponse = storeService.getByIdStores(productRequest.getStoreId().getId());
         System.out.println("ini adalah store response : " +storeResponse);
 
@@ -120,10 +120,23 @@ public class ProductServiceImpl implements ProductService {
         productPriceService.create(productPrice);
 
         // Tampilkan product nya
-        return toProductResponse(store,product,productPrice);
+         return ProductResponse.builder()
+                .id(product.getId())
+                .productName(product.getName())
+                .description(product.getDescription())
+                .price(productPrice.getPrice())
+                .stock(productPrice.getStock())
+                .store(StoreResponse.builder()
+                        .id(storeResponse.getId())
+                        .storeName(storeResponse.getStoreName())
+                        .noSiup(storeResponse.getNoSiup())
+                        .build())
+                .build();
     }
 
 
+//    ============================= 000 ================================
+    // Paginasi
     @Override
     public Page<ProductResponse> getAllByNameOrPrice(String name, Long maxPrice, Integer page, Integer size) {
         // Specification untuk menentukan  kriteria pencarian , disini criteria pencarian ditandakan dengan root, root yang dimaksud adlah entity product
@@ -139,7 +152,8 @@ public class ProductServiceImpl implements ProductService {
             }
 
             if (maxPrice != null){
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(productPrice.get("price") ,maxPrice));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(productPrice.get("price") , maxPrice ));
+                System.out.println("tes");
             }
 
             return  query.where(predicates.toArray(new Predicate[]{})).getRestriction();
@@ -154,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
         for (Product product : products.getContent()){
             Optional<ProductPrice> productPrice = product.getProductPrices()
                     .stream()
-                    .filter(ProductPrice::getIsActive).findFirst();
+                   .findFirst();
 
             if (productPrice.isEmpty()) continue;
             Store store = productPrice.get().getStore();

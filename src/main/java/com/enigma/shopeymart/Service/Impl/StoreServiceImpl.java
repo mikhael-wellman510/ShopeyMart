@@ -70,6 +70,8 @@ public class StoreServiceImpl implements StoreService {
                 .build();
     }
 
+
+
     @Override
     public StoreResponse getByIdStores(String id) {
 
@@ -134,9 +136,8 @@ public class StoreServiceImpl implements StoreService {
         // Belum dapat cara atasi error kalo semisal id nya ga sama
 
         // Minta hasil dari req body nya (storeRequest.getId
-        System.out.println("hasil nya : " + getByIdStores(storeRequest.getId()));
 
-        StoreResponse hasil = getByIdStores(storeRequest.getId());
+        Store hasil = storeRepositori.findById(storeRequest.getId()).orElse(null);
 
             if (hasil != null){
                 Store store = Store.builder()

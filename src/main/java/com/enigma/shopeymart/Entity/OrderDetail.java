@@ -16,6 +16,7 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    private Integer quantity;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
@@ -26,5 +27,5 @@ public class OrderDetail {
     private ProductPrice productPrice ;
 
 
-    private Integer quantity;
+
 }

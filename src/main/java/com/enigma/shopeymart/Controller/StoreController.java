@@ -7,6 +7,7 @@ import com.enigma.shopeymart.Entity.Store;
 import com.enigma.shopeymart.Service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class StoreController {
 //    }
 
     @PostMapping(value = "/v1")
+    @PreAuthorize("hasRole('ADMIN')") // hanya admin yg bisa akses
     public StoreResponse createStores(@RequestBody StoreRequest storeRequest){
         return storeService.createStores(storeRequest);
     }

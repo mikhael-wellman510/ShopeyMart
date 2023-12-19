@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepositori extends JpaRepository<Product,String> , JpaSpecificationExecutor<Product> {
+    //Jpa Spesification digunakan untuk Pencarian(Search)
 }

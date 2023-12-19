@@ -33,11 +33,11 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse createNewOrder(OrderRequest orderRequest) {
         // Todo 1 : validate customer (ambil id customer)
         CustomerResponse customerResponse = customerService.getByIdCustomer(orderRequest.getCustomerId());
-//        Optional<Customer> customer = customerRepositori.findById(orderRequest.getCustomerId());
+//        Optional<Customer > customer = customerRepositori.findById(orderRequest.getCustomerId());
         System.out.println("Get id cutomer : " + customerResponse);
-        // Todo 2 : Convert OrderDetail (ambil data dari table order detail)
+        // Todo 2 : Convert OrderDetail (ambil data dari table orderRequest)
         List<OrderDetail> orderDetails = orderRequest.getOrderDetails().stream().map(orderDetailRequest -> {
-            // todo 3 :Validate Product Price (ambil id product_price di  t_order_detail )
+            // todo 3 :Validate Product Price (ambil id product_price dari order request )
             ProductPrice productPrice = productPriceService.getById(orderDetailRequest.getProductPriceId());
             //Masukan ke OrderDetailRequest
             return OrderDetail.builder()
@@ -62,17 +62,21 @@ public class OrderServiceImpl implements OrderService {
         // create isi order ke db
         orderRepository.saveAndFlush(order);
 
+        // set order detail
         List<OrderDetailResponse> orderDetailResponses = order.getOrderDetails().stream().map(orderDetail -> {
             // Todo 5 : Set order from orderDetail after creating new order
-            orderDetail.setOrder(order);
+            orderDetail.setOrder(order); // set order_id di order detai
             System.out.println(order);
 
             //Todo 6 : change the stock from the purchase quantity
 
             // supaya bisa setter getter , set stok dan get stok
-            ProductPrice currentProductPrice = orderDetail.getProductPrice();
+            ProductPrice currentProductPrice = orderDetail.getProductPrice(); // amibil
+
+
             System.out.println("current Produk Price : " + currentProductPrice);
             currentProductPrice.setStock(currentProductPrice.getStock() - orderDetail.getQuantity());
+
             return OrderDetailResponse.builder()
                     .orderDetailId(orderDetail.getId())
                     .quantity(orderDetail.getQuantity())
@@ -88,11 +92,14 @@ public class OrderServiceImpl implements OrderService {
                                     .id(currentProductPrice.getStore().getId())
                                     .storeName(currentProductPrice.getStore().getName())
                                     .noSiup(currentProductPrice.getStore().getNoSiup())
+                                    .address(currentProductPrice.getStore().getAddress())
                                     .build())
                             .build())
                     .build();
 
         }).toList();
+
+        System.out.println("Hasil nya bosssss :: " + orderDetailResponses);
 
 
         // Todo 9 convert customer to customer response

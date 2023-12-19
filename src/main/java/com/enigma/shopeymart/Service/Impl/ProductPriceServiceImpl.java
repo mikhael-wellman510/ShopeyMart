@@ -38,4 +38,11 @@ public class ProductPriceServiceImpl implements ProductPriceService {
         return productPriceRespositori.findByProduct_IdAndIsActive(productId,active).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"product Not Found"));
 
     }
+
+    @Override
+    public List<ProductPrice> getAllProductPrice() {
+
+
+        return productPriceRespositori.findAll();
+    }
 }

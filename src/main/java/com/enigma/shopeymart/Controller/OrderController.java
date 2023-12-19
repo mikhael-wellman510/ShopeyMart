@@ -1,6 +1,7 @@
 package com.enigma.shopeymart.Controller;
 
 
+import com.enigma.shopeymart.Constant.AppPath;
 import com.enigma.shopeymart.Dto.Request.OrderRequest;
 import com.enigma.shopeymart.Dto.Response.CommonResponse;
 import com.enigma.shopeymart.Dto.Response.OrderResponse;
@@ -14,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping(AppPath.ORDER)
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping
+    @PostMapping("/orders")
     private ResponseEntity<?> createNewOrder(@RequestBody OrderRequest orderRequest){
         OrderResponse orderResponse = orderService.createNewOrder(orderRequest);
 

@@ -15,6 +15,8 @@ import java.util.List;
 public class OrderRequest {
 
     private String customerId;
+
+    // Ini memanggil untuk ke request orderDetail
     private List<OrderDetailRequest> orderDetails;
 
 }

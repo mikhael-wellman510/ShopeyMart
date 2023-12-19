@@ -14,5 +14,7 @@ public interface ProductPriceService {
 
     ProductPrice findProductPriceIsActive(String productId,Boolean active);
 
+    List <ProductPrice> getAllProductPrice();
+
 
 }

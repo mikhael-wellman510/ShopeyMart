@@ -43,6 +43,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public CustomerResponse createNewCustomer(Customer request) {
+        Customer customer = customerRepositori.saveAndFlush(request);
+
+        return CustomerResponse.builder()
+                .id(customer.getId())
+                .name(customer.getName())
+                .mobilePhone(customer.getMobilePhone())
+                .build();
+    }
+
+    @Override
     public CustomerResponse getByIdCustomer(String id) {
 
         // D masukan ke variabel customer

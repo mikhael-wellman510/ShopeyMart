@@ -1,6 +1,7 @@
 package com.enigma.shopeymart.Entity;
 
 
+import com.enigma.shopeymart.Entity.JWT.UserCredential;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,10 @@ public class Customer {
 
     @Column(name = "email" , unique = true , nullable = false, length = 30)
     private String email;
+
+    @OneToOne
+    @JoinColumn(name = "user_credential_id")
+    private UserCredential userCredential;
 
 
 }

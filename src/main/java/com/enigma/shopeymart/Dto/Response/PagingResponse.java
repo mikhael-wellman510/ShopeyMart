@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
+// Ini untuk paginasi
 public class PagingResponse {
 
     private  Integer currentPage;
