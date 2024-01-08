@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final ValidationUtil validationUtil;
     private final AuthenticationManager authenticationManager;
     private final  JwtUtil jwtUtil;
-    @Transactional(rollbackOn = Exception.class)
+
     @Override
     public RegisterResponse registerCustumer(AuthRequest authrequest) {
         try {
@@ -151,7 +151,7 @@ public class AuthServiceImpl implements AuthService {
 
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        Authentication authentications = SecurityContextHolder.getContext().getAuthentication();
         AppUser appUser = (AppUser) authentication.getPrincipal();
 
 

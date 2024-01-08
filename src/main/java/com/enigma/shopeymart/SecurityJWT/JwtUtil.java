@@ -38,6 +38,7 @@ public class JwtUtil {
                     .withSubject(appUser.getId())
                     .withExpiresAt(Instant.now().plusSeconds(jwtExpirationInSecond))
                     .withIssuedAt(Instant.now())
+                    //Todo -> Jika nnti Ada 2 Role
                     .withClaim("role",appUser.getRole().name())
                     .sign(algorithm);
 

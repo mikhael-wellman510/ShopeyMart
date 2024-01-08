@@ -31,6 +31,7 @@ public class AppUser implements UserDetails {
         return simpleGrantedAuthorities;
     }
 
+    // Jangan di false
     @Override
     public String getPassword() {
         return password;

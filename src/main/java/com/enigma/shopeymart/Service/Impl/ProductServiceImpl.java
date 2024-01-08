@@ -140,12 +140,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<ProductResponse> getAllByNameOrPrice(String name, Long maxPrice, Integer page, Integer size) {
         // Specification untuk menentukan  kriteria pencarian , disini criteria pencarian ditandakan dengan root, root yang dimaksud adlah entity product
+
+        // Todo -> ini mau ambil data Name
         Specification<Product> spesification = (root , query ,criteriaBuilder) -> {
             // Join untuk merelasikan produk dan price
             Join<Product ,ProductPrice> productPrice =root.join("productPrices");
+
            // Predicate dgunakan untuk menggunaakan Like dimana menggunakan kondisi pencarian
             List<Predicate> predicates = new ArrayList<>();
 
+            // Todo -> ini mau cari apa
             if (name != null){
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")) ,"%" + name.toLowerCase() + "%"));
 
@@ -153,27 +157,42 @@ public class ProductServiceImpl implements ProductService {
 
             if (maxPrice != null){
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(productPrice.get("price") , maxPrice ));
-                System.out.println("tes");
+
             }
 
             return  query.where(predicates.toArray(new Predicate[]{})).getRestriction();
 
         };
 
+        // Todo -> Ini params dari controller
         Pageable pageable = PageRequest.of(page,size);
+
+        // Todo -> untuk Query di repositori
+        // Todo -> Dia pakai Entity Produk , karena nama ada di produk
         Page<Product> products = productRepositori.findAll(spesification,pageable);
 
+
+        // Ini untuk Response nya
         List<ProductResponse> productResponses = new ArrayList<>();
 
+        // Todo -> Ini Untuk Mapping
         for (Product product : products.getContent()){
             Optional<ProductPrice> productPrice = product.getProductPrices()
                     .stream()
                    .findFirst();
 
+
             if (productPrice.isEmpty()) continue;
             Store store = productPrice.get().getStore();
+            // Todo -> Ini untuk Mapping
             productResponses.add(toProductResponse(store,product,productPrice.get()));
         }
+
+
+
+        // Todo -> product.getTotalElements = hasil search , total nya brp .
+        // Todo -> Pageable itu default dari Controller
+        // Todo -> Product Response = hasil yang akan di kirimkan untuk Ke Controller
         return new PageImpl<>(productResponses,pageable,products.getTotalElements());
     }
 

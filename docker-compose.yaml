@@ -1,0 +1,35 @@
+version: '3'
+services:
+
+  postgresql:
+    container_name: postgresql
+    environment:
+      - POSTGRES_PASSWORD=adm1234
+      - POSTGRES_DB=db_shopeemart
+    networks:
+      - app-network
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+    image: postgres
+
+  app-shopeymart:
+    container_name: loan-app
+    environment:
+      - DB_HOST=postgresql
+      - DB_PORT=5432
+      - SERVER_PORT=8080
+      - DB_NAME=db_shopeemart
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=adm1234
+      - JWT_SECRET=persija
+    ports:
+      - "8085:8080"
+    build: .
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+networks:
+  app-network:
+    driver: bridge

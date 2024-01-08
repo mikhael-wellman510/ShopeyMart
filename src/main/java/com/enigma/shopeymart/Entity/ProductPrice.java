@@ -37,4 +37,6 @@ public class ProductPrice {
      @JsonBackReference
     @JoinColumn(name = "product_id")
     private Product product;
+
+
 }

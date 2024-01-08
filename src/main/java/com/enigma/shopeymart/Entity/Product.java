@@ -31,4 +31,8 @@ public class Product {
     // masukan relasi
     @OneToMany(mappedBy = "product")// biar tidak di buat table conjungtion
     private List<ProductPrice> productPrices;
+
+
+
+
 }

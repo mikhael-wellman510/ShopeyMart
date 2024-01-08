@@ -27,7 +27,7 @@ public class SecurityConfiguration {
         return  authenticationConfiguration.getAuthenticationManager();
     }
 
-    private  static final String[]WHITE_LIST_URL = {"/api/auth/**"}; // jika tdk ada path ini , maka tidak usah login
+    private  static final String[]WHITE_LIST_URL = {"/api/auth/**" , "/**"}; // jika tdk ada path ini , maka tidak usah login
 
 
 

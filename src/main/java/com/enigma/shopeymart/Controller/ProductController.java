@@ -66,7 +66,12 @@ public class ProductController {
             @RequestParam(name = "page" , required = false ,defaultValue = "0") Integer page,
             @RequestParam(name = "size" , required = false , defaultValue = "5") Integer size
             ){
+
+        // Todo -> Ini Untuk Hasil yang Akan di tampilkan
             Page<ProductResponse> productResponse = productService.getAllByNameOrPrice(name,maxPrice,page,size);
+        System.out.println("Controller" + productResponse);
+
+        // Todo -> Ini Untuk Pagging Response
         PagingResponse pagingResponse = PagingResponse.builder()
                 .currentPage(page)
                 .totalPage(productResponse.getTotalPages())

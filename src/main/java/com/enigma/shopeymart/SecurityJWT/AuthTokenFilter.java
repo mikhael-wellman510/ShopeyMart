@@ -22,6 +22,8 @@ import java.util.Map;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+
+    // Ini Dari IMPL
     private final UserService userService;
 
     @Override
@@ -42,7 +44,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 Map<String,String> userInfo = jwtUtil.getUsherInfoByToken(token);
                 UserDetails user = userService.loadUserByUserId(userInfo.get("userId"));
 
-                //Validasi Token
+                //Validasi Tokend
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
 
                 //menambahkan informasi berupa alamat IP ke Host dalam bentuk Security
